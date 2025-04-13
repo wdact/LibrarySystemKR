@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using LibrarySystemKR.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -9,74 +10,130 @@ namespace LibrarySystemKR.Helpres
 {
     public static class DbHelper
     {
-        public static int AddBookSmart(LibraryContext context, Book book)
+        public static int AddBookSmart(Book book)
         {
+            using var context = new LibraryContext();
+            using var command = context.Database.GetDbConnection().CreateCommand();
+
+            command.CommandText = @"
+        INSERT INTO Books (LibraryId, SubjectId, Author, Title, Publisher, PlaceOfPublication, YearOfPublication, Quantity)
+        VALUES (@LibraryId, @SubjectId, @Author, @Title, @Publisher, @Place, @Year, @Quantity);
+        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            command.CommandType = System.Data.CommandType.Text;
+
+            command.Parameters.Add(new SqlParameter("@LibraryId", book.LibraryId));
+            command.Parameters.Add(new SqlParameter("@SubjectId", book.SubjectId));
+            command.Parameters.Add(new SqlParameter("@Author", book.Author));
+            command.Parameters.Add(new SqlParameter("@Title", book.Title));
+            command.Parameters.Add(new SqlParameter("@Publisher", book.Publisher));
+            command.Parameters.Add(new SqlParameter("@Place", book.PlaceOfPublication));
+            command.Parameters.Add(new SqlParameter("@Year", book.YearOfPublication));
+            command.Parameters.Add(new SqlParameter("@Quantity", book.Quantity));
+
             try
             {
-                context.Books.Add(book);
-                context.SaveChanges();
+                context.Database.OpenConnection();
+                var result = command.ExecuteScalar();
+                return Convert.ToInt32(result);
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                if (ex.InnerException?.Message.Contains("triggers") == true)
-                {
-                    Debug.WriteLine("Обнаружены триггеры. Переключаемся на прямую вставку...", "Инфо");
-
-                    var sql = @"
-                        DECLARE @InsertedIds TABLE (BookId INT);
-                        INSERT INTO Books (LibraryId, SubjectId, Author, Title, Publisher, PlaceOfPublication, YearOfPublication, Quantity)
-                        OUTPUT INSERTED.BookId INTO @InsertedIds
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7});
-                        SELECT BookId FROM @InsertedIds;";
-
-                    var id = context.Database.ExecuteSqlRaw(sql,
-                        book.LibraryId,
-                        book.SubjectId,
-                        book.Author,
-                        book.Title,
-                        book.Publisher,
-                        book.PlaceOfPublication,
-                        book.YearOfPublication,
-                        book.Quantity);
-
-                    Debug.WriteLine("Книга успешно добавлена вручную через SQL.");
-
-                    return id;
-                }
+                Debug.WriteLine("Ошибка при добавлении книги в базу данных.\n\n" + ex.Message);
+                throw;
             }
-
-            return 0;
+            finally
+            {
+                context.Database.CloseConnection();
+            }
         }
 
-        public static void AddSubscriptionSmart(LibraryContext context, Subscription subscription)
+        public static void AddSubscriptionSmart(Subscription subscription)
         {
+            using var context = new LibraryContext();
+
+            var sql = @"
+                INSERT INTO Subscriptions (LibraryId, BookId, ReaderId, IssueDate, ReturnDate, Advance)
+                VALUES (@LibraryId, @BookId, @ReaderId, @IssueDate, @ReturnDate, @Advance)";
+
             try
             {
-                context.Subscriptions.Add(subscription);
-                context.SaveChanges();
+                context.Database.ExecuteSqlRaw(sql,
+                    new SqlParameter("@LibraryId", subscription.LibraryId),
+                    new SqlParameter("@BookId", subscription.BookId),
+                    new SqlParameter("@ReaderId", subscription.ReaderId),
+                    new SqlParameter("@IssueDate", subscription.IssueDate),
+                    new SqlParameter("@ReturnDate", subscription.ReturnDate),
+                    new SqlParameter("@Advance", subscription.Advance)
+                );
             }
-            catch (DbUpdateException ex)
+            catch (SqlException ex)
             {
-                if (ex.InnerException?.Message.Contains("triggers") == true)
-                {
-                    Debug.WriteLine("Ошибка сохранения подписки из-за триггеров. Выполняется SQL-вставка...", "Инфо");
+                Debug.WriteLine("Ошибка при добавлении подписки в базу данных.\n\n" + ex.Message);
+                throw;
+            }
+        }
 
-                    context.Database.ExecuteSqlRaw(@"
-                        INSERT INTO Subscriptions (LibraryId, BookId, ReaderId, IssueDate, ReturnDate, Advance)
-                        VALUES ({0}, {1}, {2}, {3}, {4}, {5})",
-                        subscription.LibraryId,
-                        subscription.BookId,
-                        subscription.ReaderId,
-                        subscription.IssueDate,
-                        subscription.ReturnDate,
-                        subscription.Advance);
+        public static void UpdateBookSmart(Book book)
+        {
+            using var context = new LibraryContext();
 
-                    Debug.WriteLine("Подписка успешно добавлена вручную через SQL.");
-                }
-                else
-                {
-                    throw;
-                }
+            var sql = @"
+                UPDATE Books SET
+                    SubjectId = @SubjectId,
+                    Author = @Author,
+                    Title = @Title,
+                    Publisher = @Publisher,
+                    PlaceOfPublication = @Place,
+                    YearOfPublication = @Year,
+                    Quantity = @Quantity
+                WHERE BookId = @BookId";
+
+            try
+            {
+                context.Database.ExecuteSqlRaw(sql,
+                    new SqlParameter("@SubjectId", book.SubjectId),
+                    new SqlParameter("@Author", book.Author),
+                    new SqlParameter("@Title", book.Title),
+                    new SqlParameter("@Publisher", book.Publisher),
+                    new SqlParameter("@Place", book.PlaceOfPublication),
+                    new SqlParameter("@Year", book.YearOfPublication),
+                    new SqlParameter("@Quantity", book.Quantity),
+                    new SqlParameter("@BookId", book.BookId)
+                );
+            }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Ошибка при обновлении книги.\n\n" + ex.Message);
+                throw;
+            }
+        }
+
+        public static void UpdateSubscriptionSmart(Subscription subscription)
+        {
+            using var context = new LibraryContext();
+
+            var sql = @"
+                UPDATE Subscriptions SET
+                    IssueDate = @IssueDate,
+                    ReturnDate = @ReturnDate,
+                    Advance = @Advance
+                WHERE LibraryId = @LibraryId AND BookId = @BookId AND ReaderId = @ReaderId";
+
+            try
+            {
+                context.Database.ExecuteSqlRaw(sql,
+                    new SqlParameter("@IssueDate", subscription.IssueDate),
+                    new SqlParameter("@ReturnDate", subscription.ReturnDate),
+                    new SqlParameter("@Advance", subscription.Advance),
+                    new SqlParameter("@LibraryId", subscription.LibraryId),
+                    new SqlParameter("@BookId", subscription.BookId),
+                    new SqlParameter("@ReaderId", subscription.ReaderId)
+                );
+            }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Ошибка при обновлении подписки.\n\n" + ex.Message);
+                throw;
             }
         }
 
@@ -127,16 +184,62 @@ namespace LibrarySystemKR.Helpres
             Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
         }
 
+        public static void DeleteBookSmart(int bookId)
+        {
+            using var context = new LibraryContext();
+
+            var sql = @"
+        DELETE FROM Books WHERE BookId = @BookId;
+    ";
+
+            try
+            {
+                context.Database.ExecuteSqlRaw(sql,
+                    new SqlParameter("@BookId", bookId)
+                );
+            }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Ошибка при удалении книги:\n\n" + ex.Message);
+                throw;
+            }
+        }
+
+        public static void DeleteSubscriptionSmart(int libraryId, int bookId, int readerId)
+        {
+            using var context = new LibraryContext();
+
+            var sql = @"
+        DELETE FROM Subscriptions
+        WHERE LibraryId = @LibraryId AND BookId = @BookId AND ReaderId = @ReaderId;
+    ";
+
+            try
+            {
+                context.Database.ExecuteSqlRaw(sql,
+                    new SqlParameter("@LibraryId", libraryId),
+                    new SqlParameter("@BookId", bookId),
+                    new SqlParameter("@ReaderId", readerId)
+                );
+            }
+            catch (SqlException ex)
+            {
+                Debug.WriteLine("Ошибка при удалении подписки:\n\n" + ex.Message);
+                throw;
+            }
+        }
+
+
         public static void ExportBooksBySubjectReport(LibraryContext context, string filePath, int minQuantity = 0, int? yearFrom = null, int? yearTo = null, int? subjectId = null, string titleContains = null)
         {
             QuestPDF.Settings.License = LicenseType.Community;
 
             var query = context.Books.Include(b => b.Subject).AsQueryable();
 
-            if (yearFrom.HasValue)
+            if (yearFrom is > 0)
                 query = query.Where(b => b.YearOfPublication >= yearFrom);
 
-            if (yearTo.HasValue)
+            if (yearTo is > 0)
                 query = query.Where(b => b.YearOfPublication <= yearTo);
 
             if (subjectId.HasValue)

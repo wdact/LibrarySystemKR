@@ -49,9 +49,24 @@ namespace LibrarySystem
             MainFrame.Content = new SubjectReportPage();
         }
 
+        private void Reports_Click2(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = new SubscriptionSummaryReportPage();
+        }
+
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             MainFrame.Content = new BookHistoryPage();
+        }
+
+        private void ButtonBase_OnClick1(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = new TopicReportPage();
+        }
+
+        private void ButtonBase_OnClick2(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = new ReaderReportPage();
         }
     }
 }

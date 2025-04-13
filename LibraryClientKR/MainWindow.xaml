@@ -1,18 +1,23 @@
 ﻿<Window x:Class="LibrarySystem.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Library System" Height="600" Width="800">
+        Title="Library System" Height="600" Width="1300"
+        MinWidth="1300">
     <Grid>
         <DockPanel>
             <StackPanel DockPanel.Dock="Left" Width="200" Background="#EEE">
-                <TextBlock Text="Навигация" FontWeight="Bold" Margin="0 0 0 10"/>
+                <TextBlock Text="Навигация" TextAlignment="Center" FontWeight="Bold" Margin="0 0 0 10"/>
                 <Button Content="Книги" Click="Books_Click" Margin="0 5"/>
                 <Button Content="Читатели" Click="Readers_Click" Margin="0 5"/>
                 <Button Content="Библиотеки" Click="Libraries_Click" Margin="0 5"/>
                 <Button Content="Темы" Click="Subjects_Click" Margin="0 5"/>
                 <Button Content="Подписки" Click="Subscriptions_Click" Margin="0 5"/>
                 <Button Content="История книг" Click="ButtonBase_OnClick" Margin="0 5"/>
-                <Button Content="Отчеты" Click="Reports_Click" Margin="0 5"/>
+                <TextBlock Text="Отчеты" TextAlignment="Center" FontWeight="Bold" Margin="0 0 0 10"/>
+                <!--<Button Content="Отчеты" Click="Reports_Click" Margin="0 5"/>-->
+                <Button Content="Отчёт по библиотекам" Click="Reports_Click2" Margin="0 5"/>
+                <Button Content="Отчёт по темам" Click="ButtonBase_OnClick1" Margin="0 5"/>
+                <Button Content="Отчёт по читателям" Click="ButtonBase_OnClick2" Margin="0 5"/>
             </StackPanel>
 
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>

@@ -53,7 +53,7 @@ namespace LibrarySystemKR
                     YearOfPublication = 2021,
                     Quantity = 10
                 };
-                var bookId = DbHelper.AddBookSmart(context, book);
+                var bookId = DbHelper.AddBookSmart(book);
 
                 // 5. Добавляем подписку
                 var subscription = new Subscription
@@ -66,7 +66,7 @@ namespace LibrarySystemKR
                     Advance = 5.00m
                 };
 
-                DbHelper.AddSubscriptionSmart(context, subscription);
+                DbHelper.AddSubscriptionSmart(subscription);
             }
 
             Console.WriteLine("Данные успешно добавлены в базу данных!");

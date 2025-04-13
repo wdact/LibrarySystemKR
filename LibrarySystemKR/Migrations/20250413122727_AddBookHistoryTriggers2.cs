@@ -30,17 +30,6 @@ namespace LibrarySystemKR.Migrations
                     SELECT LibraryId, BookId, GETDATE(), 'Редактирование' FROM inserted;
                 END
             ");
-
-            migrationBuilder.Sql(@"
-                CREATE TRIGGER AfterBookDelete
-                ON Books
-                AFTER DELETE
-                AS
-                BEGIN
-                    INSERT INTO BookHistory (LibraryId, BookId, ActionDate, ActionType)
-                    SELECT LibraryId, BookId, GETDATE(), 'Удаление' FROM deleted;
-                END
-            ");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

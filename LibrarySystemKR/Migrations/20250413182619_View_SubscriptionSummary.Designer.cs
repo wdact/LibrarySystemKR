@@ -4,6 +4,7 @@ using LibrarySystemKR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibrarySystemKR.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class LibraryContextModelSnapshot : ModelSnapshot
+    [Migration("20250413182619_View_SubscriptionSummary")]
+    partial class View_SubscriptionSummary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,20 +168,6 @@ namespace LibrarySystemKR.Migrations
                     b.ToTable("Readers");
                 });
 
-            modelBuilder.Entity("LibrarySystemKR.Models.ReaderSubscriptionSummary", b =>
-                {
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SubscriptionCount")
-                        .HasColumnType("int");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("View_ReaderSubscriptionSummary", (string)null);
-                });
-
             modelBuilder.Entity("LibrarySystemKR.Models.Subject", b =>
                 {
                     b.Property<int>("SubjectId")
@@ -254,20 +243,6 @@ namespace LibrarySystemKR.Migrations
                     b.ToTable((string)null);
 
                     b.ToView("View_SubscriptionSummary", (string)null);
-                });
-
-            modelBuilder.Entity("LibrarySystemKR.Models.TopicSubscriptionSummary", b =>
-                {
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SubscriptionCount")
-                        .HasColumnType("int");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("View_TopicSubscriptionSummary", (string)null);
                 });
 
             modelBuilder.Entity("LibrarySystemKR.Models.Book", b =>

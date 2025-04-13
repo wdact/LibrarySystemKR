@@ -12,6 +12,10 @@ namespace LibrarySystemKR
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<BookHistory> BookHistory { get; set; }
+        public DbSet<SubscriptionSummary> ViewSubscriptionSummary { get; set; }
+        public DbSet<TopicSubscriptionSummary> ViewTopicSubscriptionSummary { get; set; }
+        public DbSet<ReaderSubscriptionSummary> ViewReaderSubscriptionSummary { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS02;Database=LibraryDB;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -121,46 +125,18 @@ namespace LibrarySystemKR
                 .HasOne(bh => bh.Book)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SubscriptionSummary>()
+                .HasNoKey()
+                .ToView("View_SubscriptionSummary");
+
+            modelBuilder.Entity<TopicSubscriptionSummary>()
+                .HasNoKey()
+                .ToView("View_TopicSubscriptionSummary");
+
+            modelBuilder.Entity<ReaderSubscriptionSummary>()
+                .HasNoKey()
+                .ToView("View_ReaderSubscriptionSummary");
         }
-
-        //// Миграция для добавления CHECK и триггеров
-        //public override int SaveChanges()
-        //{
-        //    // Запуск миграций вручную (если необходимо)
-        //    using (var transaction = Database.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            var result = base.SaveChanges();
-
-        //            // Добавление CHECK ограничения для YearOfPublication в Book
-        //            this.Database.ExecuteSqlRaw("ALTER TABLE Books DROP CONSTRAINT IF EXISTS CK_YearOfPublication");
-        //            this.Database.ExecuteSqlRaw("ALTER TABLE Books ADD CONSTRAINT CK_YearOfPublication CHECK (YearOfPublication >= 1900)");
-
-        //            // Добавление триггера на таблицу Books
-        //            this.Database.ExecuteSqlRaw("DROP TRIGGER IF EXISTS AfterBookInsert");
-        //            this.Database.ExecuteSqlRaw(@"
-        //                CREATE TRIGGER AfterBookInsert
-        //                ON Books
-        //                AFTER INSERT
-        //                AS
-        //                BEGIN
-        //                    UPDATE Libraries
-        //                    SET LastUpdated = GETDATE()
-        //                    WHERE LibraryId IN (SELECT LibraryId FROM inserted)
-        //                END");
-
-        //            // Закрываем транзакцию
-        //            transaction.Commit();
-
-        //            return result;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            transaction.Rollback();
-        //            throw;
-        //        }
-        //    }
-        //}
     }
 }

@@ -102,7 +102,7 @@ namespace LibraryClientKR.View
                 SubjectId = Subjects.FirstOrDefault()?.SubjectId ?? 1
             };
 
-            DbHelper.AddBookSmart(_context, newBook);
+            DbHelper.AddBookSmart(newBook);
             LoadData();
         }
 
@@ -110,15 +110,21 @@ namespace LibraryClientKR.View
         {
             if (BookGrid.SelectedItem is Book selected)
             {
-                _context.Books.Remove(selected);
-                _context.SaveChanges();
+                DbHelper.DeleteBookSmart(selected.BookId);
                 LoadData();
             }
         }
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            _context.SaveChanges();
+            foreach (var book in Books)
+            {
+                try
+                {
+                    DbHelper.UpdateBookSmart(book);
+                }
+                catch { /* ошибки уже обрабатываются внутри */ }
+            }
             MessageBox.Show("Изменения сохранены.");
             LoadData();
         }

@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
+using LibrarySystemKR.Helpres;
 
 namespace LibraryClientKR.View
 {
@@ -153,8 +154,7 @@ namespace LibraryClientKR.View
         {
             if (SubscriptionGrid.SelectedItem is Subscription selected)
             {
-                _context.Subscriptions.Remove(selected);
-                _context.SaveChanges();
+                DbHelper.DeleteSubscriptionSmart(selected.LibraryId, selected.BookId, selected.ReaderId);
                 LoadSubscriptions();
             }
         }
@@ -170,7 +170,14 @@ namespace LibraryClientKR.View
                 }
             }
 
-            _context.SaveChanges();
+            foreach (var sub in Subscriptions)
+            {
+                try
+                {
+                    DbHelper.UpdateSubscriptionSmart(sub);
+                }
+                catch { /* уже обработано */ }
+            }
             MessageBox.Show("Изменения сохранены.");
             LoadSubscriptions();
         }
