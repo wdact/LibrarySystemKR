@@ -1,0 +1,48 @@
+﻿<Page x:Class="LibraryClientKR.View.LibrariesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LibraryClientKR.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="LibrariesPage">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Поиск -->
+        <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
+            <TextBox x:Name="SearchBox" Width="250" Margin="0 0 10 0"/>
+            <Button Content="Поиск" Click="Search_Click" Margin="0 0 10 0"/>
+            <Button Content="Сбросить" Click="Reset_Click"/>
+        </StackPanel>
+
+        <!-- Таблица -->
+        <DataGrid x:Name="LibraryGrid"
+                  Grid.Row="1"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="False"
+                  SelectionMode="Single"
+                  Margin="0 0 0 10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding LibraryId}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="*"/>
+                <DataGridTextColumn Header="Обновлено" Binding="{Binding LastUpdated, StringFormat=d}" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопки -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+            <Button Content="Добавить" Click="AddLibrary_Click" Margin="0 0 10 0"/>
+            <Button Content="Удалить" Click="DeleteLibrary_Click" Margin="0 0 10 0"/>
+            <Button Content="Сохранить" Click="SaveChanges_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
