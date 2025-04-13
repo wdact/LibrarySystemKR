@@ -47,11 +47,19 @@ namespace LibraryClientKR.View
             Libraries = new ObservableCollection<Library>(_context.Libraries.ToList());
 
             LibraryFilterComboBox.ItemsSource = Libraries;
+            NewLibraryComboBox.ItemsSource = Libraries;
+            NewReaderComboBox.ItemsSource = Readers;
 
             LoadSubscriptions();
             OnPropertyChanged(nameof(Readers));
             OnPropertyChanged(nameof(Books));
         }
+
+        private void ApplyFilter_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSubscriptions();
+        }
+
 
         private void LoadSubscriptions()
         {
@@ -91,14 +99,42 @@ namespace LibraryClientKR.View
                 return;
             }
 
-            var firstBook = Books.First();
-            var firstReader = Readers.First();
+            if (NewBookComboBox.SelectedItem is not Book selectedBook ||
+                NewReaderComboBox.SelectedItem is not Reader selectedReader)
+            {
+                MessageBox.Show("Выберите книгу и читателя.");
+                return;
+            }
+
+            var totalCopies = selectedBook.Quantity;
+
+            var activeSubscriptions = _context.Subscriptions.Count(s =>
+                s.BookId == selectedBook.BookId &&
+                s.LibraryId == selectedBook.LibraryId &&
+                s.ReturnDate >= DateTime.Today); // книга ещё не возвращена
+
+            if (activeSubscriptions >= totalCopies)
+            {
+                MessageBox.Show("Все экземпляры этой книги уже выданы.", "Нет доступных копий", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var exists = _context.Subscriptions.Any(s =>
+                s.LibraryId == selectedBook.LibraryId &&
+                s.BookId == selectedBook.BookId &&
+                s.ReaderId == selectedReader.ReaderId);
+
+            if (exists)
+            {
+                MessageBox.Show("Такая подписка уже существует.");
+                return;
+            }
 
             var newSub = new Subscription
             {
-                LibraryId = firstBook.LibraryId,
-                BookId = firstBook.BookId,
-                ReaderId = firstReader.ReaderId,
+                LibraryId = selectedBook.LibraryId,
+                BookId = selectedBook.BookId,
+                ReaderId = selectedReader.ReaderId,
                 IssueDate = DateTime.Today,
                 ReturnDate = DateTime.Today.AddDays(14),
                 Advance = 0
@@ -107,6 +143,10 @@ namespace LibraryClientKR.View
             _context.Subscriptions.Add(newSub);
             _context.SaveChanges();
             LoadSubscriptions();
+
+            NewLibraryComboBox.SelectedItem = null;
+            NewBookComboBox.ItemsSource = null;
+            NewReaderComboBox.SelectedItem = null;
         }
 
         private void DeleteSubscription_Click(object sender, RoutedEventArgs e)
@@ -138,5 +178,20 @@ namespace LibraryClientKR.View
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private void NewLibraryComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (NewLibraryComboBox.SelectedItem is not Library selectedLibrary)
+            {
+                MessageBox.Show("Выберите библиотеку.");
+                return;
+            }
+            NewBookComboBox.SelectedItem = null;
+
+            NewBookComboBox.ItemsSource = Books
+                .Where(b => b.LibraryId == selectedLibrary.LibraryId)
+                .OrderBy(b => b.Title)
+                .ToList();
+        }
     }
 }

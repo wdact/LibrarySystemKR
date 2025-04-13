@@ -17,10 +17,9 @@
 
         <!-- Панель поиска и кнопок -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <TextBox x:Name="SearchBox" Width="250" Margin="0 10 10 0"/>
-            <Button Content="Поиск" Click="Search_Click" Margin="0 10 10 0"/>
-            <Button Content="Добавить" Click="AddReader_Click" Margin="0 10 10 0"/>
-            <Button Content="Удалить выбранного" Click="DeleteReader_Click"/>
+            <TextBox x:Name="SearchBox" Width="250" Margin="0 0 10 0"/>
+            <Button Content="Поиск" Click="Search_Click" Margin="0 0 10 0"/>
+            <Button Content="Сбросить" Click="Reset_Click"/>
         </StackPanel>
 
         <!-- Таблица -->
@@ -40,8 +39,10 @@
         </DataGrid>
 
         <!-- Сохранение -->
-        <Button Grid.Row="2" Content="Сохранить изменения"
-                HorizontalAlignment="Right"
-                Click="SaveChanges_Click"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Content="Добавить" Click="AddReader_Click" Margin="0 0 10 0"/>
+            <Button Content="Удалить" Click="DeleteReader_Click" Margin="0 0 10 0"/>
+            <Button Content="Сохранить" Click="SaveChanges_Click"/>
+        </StackPanel>
     </Grid>
 </Page>

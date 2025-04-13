@@ -11,6 +11,7 @@ namespace LibrarySystemKR
         public DbSet<Reader> Readers { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<BookHistory> BookHistory { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS02;Database=LibraryDB;Trusted_Connection=True;TrustServerCertificate=True;");

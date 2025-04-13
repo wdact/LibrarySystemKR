@@ -1,5 +1,7 @@
 ﻿using LibrarySystemKR.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
+using LibrarySystemKR.Helpres;
 
 namespace LibrarySystemKR
 {
@@ -51,21 +53,20 @@ namespace LibrarySystemKR
                     YearOfPublication = 2021,
                     Quantity = 10
                 };
-                context.Books.Add(book);
-                context.SaveChanges();  // Сохраняем книгу, чтобы она была связана с библиотекой и темой
+                var bookId = DbHelper.AddBookSmart(context, book);
 
                 // 5. Добавляем подписку
                 var subscription = new Subscription
                 {
-                    BookId = book.BookId,  // Используем значение для BookCode
+                    BookId = bookId,  // Используем значение для BookCode
                     ReaderId = reader.ReaderId,  // Используем значение для ReaderCode
                     LibraryId = library.LibraryId,
                     IssueDate = DateTime.Now,
                     ReturnDate = DateTime.Now.AddDays(14),
                     Advance = 5.00m
                 };
-                context.Subscriptions.Add(subscription);
-                context.SaveChanges();  // Сохраняем подписку
+
+                DbHelper.AddSubscriptionSmart(context, subscription);
             }
 
             Console.WriteLine("Данные успешно добавлены в базу данных!");

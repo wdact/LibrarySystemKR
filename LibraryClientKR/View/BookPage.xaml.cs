@@ -18,6 +18,7 @@ using static System.Reflection.Metadata.BlobBuilder;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using LibraryClientKR.Helpers;
+using LibrarySystemKR.Helpres;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryClientKR.View
@@ -101,8 +102,7 @@ namespace LibraryClientKR.View
                 SubjectId = Subjects.FirstOrDefault()?.SubjectId ?? 1
             };
 
-            _context.Books.Add(newBook);
-            _context.SaveChanges();
+            DbHelper.AddBookSmart(_context, newBook);
             LoadData();
         }
 
@@ -157,6 +157,7 @@ namespace LibraryClientKR.View
 
         private void ClearFilter_Click(object sender, RoutedEventArgs e)
         {
+            SearchBox.Text = "";
             FilterLibraryComboBox.SelectedItem = null;
             FilterSubjectComboBox.SelectedItem = null;
             LoadBooks();

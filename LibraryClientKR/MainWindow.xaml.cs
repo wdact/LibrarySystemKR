@@ -46,7 +46,12 @@ namespace LibrarySystem
 
         private void Reports_Click(object sender, RoutedEventArgs e)
         {
-            //MainFrame.Content = new Views.ReportPage();
+            MainFrame.Content = new SubjectReportPage();
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Content = new BookHistoryPage();
         }
     }
 }

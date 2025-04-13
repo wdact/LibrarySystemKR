@@ -86,6 +86,12 @@ namespace LibraryClientKR.View
             }
         }
 
+        private void Reset_Click(object sender, RoutedEventArgs e)
+        {
+            SearchBox.Text = "";
+            LoadReaders();
+        }
+
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
             _context.SaveChanges();

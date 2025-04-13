@@ -39,7 +39,7 @@
         </DataGrid>
 
         <!-- Кнопки -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
             <Button Content="Добавить" Click="AddLibrary_Click" Margin="0 0 10 0"/>
             <Button Content="Удалить" Click="DeleteLibrary_Click" Margin="0 0 10 0"/>
             <Button Content="Сохранить" Click="SaveChanges_Click"/>

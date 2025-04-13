@@ -11,6 +11,7 @@
                 <Button Content="Библиотеки" Click="Libraries_Click" Margin="0 5"/>
                 <Button Content="Темы" Click="Subjects_Click" Margin="0 5"/>
                 <Button Content="Подписки" Click="Subscriptions_Click" Margin="0 5"/>
+                <Button Content="История книг" Click="ButtonBase_OnClick" Margin="0 5"/>
                 <Button Content="Отчеты" Click="Reports_Click" Margin="0 5"/>
             </StackPanel>
 
