@@ -63,6 +63,11 @@ namespace LibraryClientKR.View
         private void AddSubject_Click(object sender, RoutedEventArgs e)
         {
             var subject = new Subject { Name = "Новая тематика" };
+            if (Subjects.Any(lib => lib.Name == "Новая тематика"))
+            {
+                MessageBox.Show("Название темы не может быть одинаковым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             _context.Subjects.Add(subject);
             _context.SaveChanges();
             LoadSubjects();

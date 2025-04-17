@@ -72,6 +72,12 @@ namespace LibraryClientKR.View
                 LastUpdated = DateTime.Now
             };
 
+            if (Libraries.Any(lib => lib.Name == "Новая библиотека"))
+            {
+                MessageBox.Show("Название библиотеки не может быть одинаковым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             _context.Libraries.Add(lib);
             _context.SaveChanges();
             LoadLibraries();

@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LibraryClientKR.View"
+      xmlns:helpers="clr-namespace:testWPF.Helpers"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SubscriptionPage">
@@ -18,7 +19,8 @@
         <!-- Панель фильтра и поиска -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
             <ComboBox x:Name="LibraryFilterComboBox" Width="150" DisplayMemberPath="Name" SelectedValuePath="LibraryId" Margin="0 0 10 0"/>
-            <TextBox x:Name="SearchBox" Width="250" Margin="0 0 10 0"/>
+            <TextBox x:Name="SearchBox" VerticalAlignment="Center"
+                     helpers:Placeholder.Text="ФИО, книга" Width="250" Margin="0 0 10 0"/>
             <Button Content="Поиск" Click="Search_Click" Margin="0 0 10 0"/>
             <Button Content="Применить фильтр" Click="ApplyFilter_Click" Margin="0 0 10 0"/>
             <Button Content="Сбросить фильтр" Click="ClearFilter_Click"/>
@@ -105,20 +107,19 @@
                       DisplayMemberPath="Name"
                       SelectedValuePath="LibraryId"
                       SelectionChanged="NewLibraryComboBox_OnSelectionChanged"
-                      Margin="0 10 10 0"/>
-
+                      Margin="0 0 10 0"/>
 
             <ComboBox x:Name="NewBookComboBox" Width="150"
                       DisplayMemberPath="Title"
                       SelectedValuePath="BookId" 
-                      Margin="0 10 10 0"/>
+                      Margin="0 0 10 0"/>
 
             <ComboBox x:Name="NewReaderComboBox" Width="150"
                       DisplayMemberPath="FullName"
                       SelectedValuePath="ReaderId"
-                      Margin="0 10 10 0"/>
+                      Margin="0 0 10 0"/>
 
-            <Button Content="Создать подписку" Click="AddSubscription_Click"/>
+            <Button Content="Создать подписку" Click="AddSubscription_Click" Margin="0 0 10 0"/>
             <Button Content="Удалить" Click="DeleteSubscription_Click" Margin="0 0 10 0"/>
             <Button Content="Сохранить" Click="SaveChanges_Click"/>
         </StackPanel>

@@ -25,6 +25,12 @@ namespace LibrarySystemKR.Migrations
                     table.PrimaryKey("PK_Libraries", x => x.LibraryId);
                 });
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Libraries_Name_Unique",
+                table: "Libraries",
+                column: "Name",
+                unique: true);
+
             migrationBuilder.CreateTable(
                 name: "Readers",
                 columns: table => new
@@ -46,12 +52,18 @@ namespace LibrarySystemKR.Migrations
                 {
                     SubjectId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValue: "Unnamed Subject")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Subjects", x => x.SubjectId);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subjects_Name_Unique",
+                table: "Subjects",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateTable(
                 name: "Books",

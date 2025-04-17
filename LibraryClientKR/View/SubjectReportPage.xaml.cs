@@ -169,7 +169,7 @@ namespace LibraryClientKR.View
                     int.TryParse(yearToBox.Text, out int yTo);
                     var sid = subjectComboBox.SelectedValue as int?;
                     var title = string.IsNullOrWhiteSpace(titleFilterBox.Text) ? null : titleFilterBox.Text;
-                    DbHelper.ExportBooksBySubjectReport(_context, dialog.FileName, minQ, yFrom, yTo, sid, title);
+                    //DbHelper.ExportBooksBySubjectReport(_context, dialog.FileName, minQ, yFrom, yTo, sid, title);
                     break;
 
                 case ReportType.SubscriptionsByReader:
@@ -178,7 +178,7 @@ namespace LibraryClientKR.View
                     var to = toDatePicker.SelectedDate;
                     var readerId = readerComboBox.SelectedValue as int?;
                     var libId = libraryComboBox.SelectedValue as int?;
-                    DbHelper.ExportSubscriptionsByReaderReport(_context, dialog.FileName, minA, from, to, readerId, libId);
+                    //DbHelper.ExportSubscriptionsByReaderReport(_context, dialog.FileName, minA, from, to, readerId, libId);
                     break;
 
                 case ReportType.SubscriptionsByLibrary:
@@ -187,7 +187,7 @@ namespace LibraryClientKR.View
                     var t = toDatePicker.SelectedDate;
                     var subjId = subjectComboBox.SelectedValue as int?;
                     var libName = string.IsNullOrWhiteSpace(libraryNameBox.Text) ? null : libraryNameBox.Text;
-                    DbHelper.ExportSubscriptionsByLibraryReport(_context, dialog.FileName, minC, f, t, subjId, libName);
+                    //DbHelper.ExportSubscriptionsByLibraryReport(_context, dialog.FileName, minC, f, t, subjId, libName);
                     break;
             }
         }

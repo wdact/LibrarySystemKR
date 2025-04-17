@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LibraryClientKR.Helpers;
 using LibrarySystemKR.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -95,7 +96,7 @@ namespace LibraryClientKR.View
 
             try
             {
-                //ReportExporter.ExportReaderSummaryToPdf(data.ToList());
+                ReportExporter.ExportReaderSummaryToPdf(data.ToList());
             }
             catch (Exception ex)
             {

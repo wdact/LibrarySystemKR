@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:LibraryClientKR.View"
+      xmlns:helpers="clr-namespace:testWPF.Helpers"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ReaderPage">
@@ -17,7 +18,8 @@
 
         <!-- Панель поиска и кнопок -->
         <StackPanel Orientation="Horizontal" Margin="0 0 0 10">
-            <TextBox x:Name="SearchBox" Width="250" Margin="0 0 10 0"/>
+            <TextBox x:Name="SearchBox" Width="250" VerticalAlignment="Center"
+                     helpers:Placeholder.Text="ФИО, адрес, телефон" Margin="0 0 10 0"/>
             <Button Content="Поиск" Click="Search_Click" Margin="0 0 10 0"/>
             <Button Content="Сбросить" Click="Reset_Click"/>
         </StackPanel>

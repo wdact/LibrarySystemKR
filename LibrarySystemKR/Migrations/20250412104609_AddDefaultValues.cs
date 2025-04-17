@@ -11,18 +11,24 @@ namespace LibrarySystemKR.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddCheckConstraint(
+                name: "CK_Books_Year",
+                table: "Books",
+                sql: "[YearOfPublication] >= 1900");
+
+            migrationBuilder.AddCheckConstraint(
+                name: "CK_Books_Quantity",
+                table: "Books",
+                sql: "[Quantity] >= 0");
+
+            migrationBuilder.AddCheckConstraint(
+                name: "CK_Subscriptions_Advance",
+                table: "Subscriptions",
+                sql: "[Advance] >= 0");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_BookHistory_Libraries_LibraryId",
                 table: "BookHistory");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Subjects",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Phone",
@@ -50,17 +56,6 @@ namespace LibrarySystemKR.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Libraries",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                defaultValue: "Unnamed Library",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(450)",
-                oldDefaultValue: "Unnamed Library");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Address",
@@ -122,6 +117,10 @@ namespace LibrarySystemKR.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropCheckConstraint("CK_Books_Year", "Books");
+            migrationBuilder.DropCheckConstraint("CK_Books_Quantity", "Books");
+            migrationBuilder.DropCheckConstraint("CK_Subscriptions_Advance", "Subscriptions");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "Subjects",

@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LibraryClientKR.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryClientKR.View
@@ -84,7 +85,7 @@ namespace LibraryClientKR.View
 
             if (dialog.ShowDialog() == true)
             {
-                DbHelper.ExportBookHistoryToPdf(_history.ToList(), dialog.FileName);
+                ReportExporter.ExportBookHistoryToPdf(_history.ToList(), dialog.FileName);
             }
         }
     }
